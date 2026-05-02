@@ -25,75 +25,111 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
   </head>
-  <body>
-    <header class="header">   
-      <nav class="navbar navbar-expand-lg">
-        <div class="search-panel">
-          <div class="search-inner d-flex align-items-center justify-content-center">
-            <div class="close-btn">Close <i class="fa fa-close"></i></div>
-            <form id="searchForm" action="#">
-              <div class="form-group">
-                <input type="search" name="search" placeholder="What are you searching for...">
-                <button type="submit" class="submit">Search</button>
-              </div>
-            </form>
+  <header class="header">   
+  <nav class="navbar navbar-expand-lg">
+    <div class="search-panel">
+      <div class="search-inner d-flex align-items-center justify-content-center">
+        <div class="close-btn">Close <i class="fa fa-close"></i></div>
+        <form id="searchForm" action="#">
+          <div class="form-group">
+            <input type="search" name="search" placeholder="What are you searching for...">
+            <button type="submit" class="submit">Search</button>
           </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <div class="navbar-header">
+        <a href="{{ url('admin/dashboard') }}" class="navbar-brand">
+          <div class="brand-text brand-big visible text-uppercase">
+            <strong class="text-primary">Dark</strong><strong>Admin</strong>
+          </div>
+          <div class="brand-text brand-sm">
+            <strong class="text-primary">D</strong><strong>A</strong>
+          </div>
+        </a>
+        <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+      </div>
+
+      <div class="right-menu list-inline no-margin-bottom">    
+        <div class="list-inline-item">
+            <a href="#" class="search-open nav-link"><i class="icon-magnifying-glass-browser"></i></a>
         </div>
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-          <div class="navbar-header">
-            <!-- Navbar Header--><a href="index.html" class="navbar-brand">
-              <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>Admin</strong></div>
-              <div class="brand-text brand-sm"><strong class="text-primary">D</strong><strong>A</strong></div></a>
-            <!-- Sidebar Toggle Btn-->
-            <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
-          </div>
-          <div class="right-menu list-inline no-margin-bottom">    
-            <div class="list-inline-item"><a href="#" class="search-open nav-link"><i class="icon-magnifying-glass-browser"></i></a></div>
-            <div class="list-inline-item dropdown"><a id="navbarDropdownMenuLink1" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link messages-toggle"><i class="icon-email"></i><span class="badge dashbg-1">5</span></a>
-              <div aria-labelledby="navbarDropdownMenuLink1" class="dropdown-menu messages"><a href="#" class="dropdown-item message d-flex align-items-center">
-                  <div class="profile"><img src="admin/img/avatar-3.jpg" alt="..." class="img-fluid">
-                    <div class="status online"></div>
-</div>
-                  <div class="content">   <strong class="d-block">Sara Wood</strong><span class="d-block">lorem ipsum dolor sit amit</span><small class="date d-block">10:30pm</small></div></a><a href="#" class="dropdown-item text-center message"> <strong>See All Messages <i class="fa fa-angle-right"></i></strong></a></div>
+
+        <div class="list-inline-item dropdown">
+            <a id="navbarDropdownMenuLink1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link messages-toggle">
+                <i class="icon-email"></i>
+                <span class="badge dashbg-1">{{ $messageCount }}</span>
+            </a>
+
+            <div aria-labelledby="navbarDropdownMenuLink1" class="dropdown-menu messages dropdown-menu-right">
+                @forelse($recentMessages as $msg)
+                    <a href="{{ route('admin.messages') }}" class="dropdown-item message d-flex align-items-center">
+                        <div class="profile">
+                            <img src="{{ asset('admin/img/avatar-3.jpg') }}" alt="..." class="img-fluid">
+                            <div class="status online"></div>
+                        </div>
+                        <div class="content">   
+                            <strong class="d-block">{{ $msg->name }}</strong>
+                            <span class="d-block text-muted small">{{ Str::limit($msg->message, 30) }}</span>
+                            <small class="date d-block">{{ $msg->created_at->diffForHumans() }}</small>
+                        </div>
+                    </a>
+                @empty
+                    <div class="dropdown-item text-center small text-gray-500">No new messages</div>
+                @endforelse
+
+                <a href="{{ route('admin.messages') }}" class="dropdown-item text-center message"> 
+                    <strong>See All Messages <i class="fa fa-angle-right"></i></strong>
+                </a>
             </div>
-          
-    <!-- Logout -->
-<div class="list-inline-item logout">
-    <!-- This link triggers the form submission -->
-    <a id="logout" href="#" class="nav-link"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        Logout <i class="icon-logout"></i>
-    </a>
-    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-        @csrf
-    </form>
-</div>
-          </div>
         </div>
-      </nav>
-    </header>
+
+        <div class="list-inline-item logout">
+            <a id="logout" href="#" class="nav-link"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                 Logout <i class="icon-logout"></i>
+            </a>
+            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                @csrf
+            </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
     <div class="d-flex align-items-stretch">
       <!-- Sidebar Navigation-->
       <nav id="sidebar">
         <!-- Sidebar Header-->
-        <div class="sidebar-header d-flex align-items-center">
-          <div class="avatar"><img src="admin/img/avatar-6.jpg" alt="..." class="img-fluid rounded-circle"></div>
-          <div class="title">
-            <h1 class="h5">Livinus Benedict</h1>
-            <p>Admin</p>
-          </div>
-        </div>
+        <!-- Sidebar Header -->
+@auth
+<div class="sidebar-header d-flex align-items-center">
+    <div class="avatar">
+        <img src="{{ asset(auth()->user()->avatar_path ?? 'admin/img/avatar-6.jpg') }}" 
+             alt="{{ auth()->user()->name }}" 
+             class="img-fluid rounded-circle">
+    </div>
+    
+    <div class="title">
+        <h1 class="h5">{{ auth()->user()->name }}</h1>
+        <p>{{ auth()->user()->role ?? 'Admin' }}</p>
+    </div>
+</div>
+@endauth
         <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
         <ul class="list-unstyled">
-                <li class="active"><a href="index.html"> <i class="icon-home"></i>Home </a></li>
+                <li class="active"><a href="{{ route('admin.dashboard') }}"> <i class="icon-home"></i>Home </a></li>
                 <li><a href="{{ route('admin.category') }}"> <i class="icon-grid"></i>Category </a></li>
+                 <li><a href="{{ route('admin.Viewcategory') }}"> <i class="icon-grid"></i>View Categories </a></li>
                 
                 
-                <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
+                <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Products</a>
                   <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
-                    <li><a href="#">Page</a></li>
-                    <li><a href="#">Page</a></li>
-                    <li><a href="#">Page</a></li>
+                    <li><a href="{{ route('admin.addproduct') }}">Add product</a></li>
+                    <li><a href="{{ route('admin.viewproduct') }}">View product</a></li>
+                    <li><a href="{{ route('admin.vieworders')}}">View orders</a></li>
                   </ul>
                 </li>
                 
@@ -107,9 +143,8 @@
           </div>
         </div>
         <section class="no-padding-top no-padding-bottom">
-          @yield('dashboard')
+          @yield('content')
           
-          @yield('category')
         </section>
                      
           <div class="container-fluid">
